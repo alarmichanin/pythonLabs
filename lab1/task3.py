@@ -1,30 +1,35 @@
-input = input("Enter your expression: ")
-str = ''
+user_input = input("Enter your expression: ")
+main_str = ''
 
-def checkEBNF(input,str):
+def checkEBNF(use_input):
     '''
     checkEBNF - it's a function for cheking :
     1) Is the current element a number if not , check is it + or -
     2) Check if after + or - we have number
     3) In other variant we get phrase "(False,None)".
     '''
-    if(len(input) != 0):
-        if(input[0].isdigit()):
-            str+=input[0]
-            checkEBNF(input[1:],str)
-        elif(input[0] == '+' or input[0] == '-'):
-            if(input[1].isdigit()):
-                str+=input[0]+input[1]
-                checkEBNF(input[2:],str)
-            else:
-                print("(False,None)")
+    global main_str
+    if len(use_input):
+        if use_input[0].isdigit():
+            main_str+=use_input[0]
+            return checkEBNF(use_input[1:])
+        elif use_input[0] in '+-':
+            try:
+                if use_input[1].isdigit():
+                    main_str+=use_input[0]+use_input[1]
+                    return checkEBNF(use_input[2:])
+                else:
+                    return (False,None)
+            except IndexError:
+                return (False,None)
         else:
-            print("(False,None)")
+           return (False,None)
     else:
-        return print("(True, ",eval(str),")")
-if(len(input) != 0):
-    if(input[0].isdigit()):
-        checkEBNF(input[1:],str)
+        return (True,eval(main_str))
+if len(user_input):
+    if user_input[0].isdigit():
+        main_str+=user_input[0]
+        print(checkEBNF(user_input[1:]))
     else:
         print("(False,None)")
 else:

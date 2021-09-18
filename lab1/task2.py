@@ -3,9 +3,16 @@ from functools import reduce
 from operator import add, sub, mul, truediv
 
 
-operations = {'add': add, 'sub': sub, 'mul': mul, 'div': truediv}
-operatorUse = argv[1]
-nums = argv[2:]
-# next operation give us oppportunity to use for every member of list some operation which user choose
-# before it we convert type of member to int
-print(reduce(lambda a, b: operations.get(operatorUse)(int(a), int(b)), nums))
+def custom_calculate(user_input):
+    operations = {'add': add, 'sub': sub, 'mul': mul, 'div': truediv}
+    operatorUse = user_input[1]
+    nums = user_input[2:]
+    # next operation give us oppportunity to use for every member of list some operation which user choose
+    # before it we convert type of member to int
+    try:
+        operations[operatorUse]
+        return reduce(lambda a, b: operations.get(operatorUse)(int(a), int(b)), nums)
+    except:
+        None
+
+print(custom_calculate(argv))

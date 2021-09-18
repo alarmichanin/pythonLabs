@@ -1,3 +1,11 @@
 from sys import argv
-if len(argv) > 1:
-    print(eval(''.join(argv[1:])))
+
+
+def calculate(user_input): 
+    if len(argv):
+        try:
+            return eval(''.join(argv[1:]))
+        except:
+            None
+
+print(calculate(argv[1:]))
