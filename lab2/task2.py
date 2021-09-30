@@ -14,14 +14,14 @@ class Rational:
             return None
     def print_normal_form(self):
         try:
-            return print(self.__numerator,'/',self.__denominator)
+            return str(self.__numerator)+"/"+str(self.__denominator)
         except:
             return None
     def print_floating_point_format(self):
         try:
-            return print(self.__numerator/self.__denominator)
+            return self.__numerator/self.__denominator
         except:
             return None
 rational=Rational(5,10)
-rational.print_normal_form()
-rational.print_floating_point_format()
+print(rational.print_normal_form())
+print(rational.print_floating_point_format())
