@@ -1,8 +1,11 @@
 class Product:
     def __init__(self, price=0, description="smth here", h=10, w=10, l=10):
-        self.price = price
+        self.__price = price
         self.__description = description
         self.__dimensions = [h, w, l]
+
+    def get_price(self):
+        return self.__price
 
 
 class Customer:
@@ -10,7 +13,10 @@ class Customer:
         self.__surname = surname
         self.__name = name
         self.__patronymic = patronymic
-        self.phone = phone
+        self.__phone = phone
+
+    def get_phone(self):
+        return self.__phone
 
 
 class Order(Product, Customer):
@@ -27,18 +33,17 @@ class Order(Product, Customer):
 
     def __total_value__(self):
         total = 0
-        for order in self.__orders[self.phone]:
-            total += order.price
+        for order in self.__orders[self.get_phone()]:
+            total += order.get_price()
         return total
 
 
 def main():
-    order1 = Order(100, 'iPhone', 100, 2, 10, 'Tkachenko', 'Roman', 'Olegovich', '0997435612')
-    order2 = Order(120, 'iMac', 100, 15, 10, 'Tkachenko', 'Roman', 'Olegovich', '0997435612')
-    order3 = Order()
-    print(order1.__total_value__())
-    print(order2.__total_value__())
-    print(order3.__total_value__())
+    order_roman_1 = Order(100, 'iPhone', 100, 2, 10, 'Tkachenko', 'Roman', 'Olegovich', '0997435612')
+    order_roman_2 = Order(120, 'iMac', 100, 15, 10, 'Tkachenko', 'Roman', 'Olegovich', '0997435612')
+    order_not_roman = Order()
+    print(order_roman_1.__total_value__())
+    print(order_not_roman.__total_value__())
 
 
 main()
