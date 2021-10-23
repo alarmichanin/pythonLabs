@@ -46,6 +46,9 @@ class Order:
             total += item.get_price()
         return total
 
+    def __str__(self):
+        return f"{self.__customer} total sum: {self.__counting__()}"
+
 
 def main():
     try:
@@ -57,9 +60,10 @@ def main():
         customer2 = Customer("Denus", "Ilya", "Andriyovich", "0942659504")
         order1 = Order([product1, product4, product2], customer1)
         order2 = Order([product3, product1], customer2)
-        print(f'{customer1} total sum: {order1.__counting__()}')
-        print(f'{customer2} total sum: {order2.__counting__()}')
+        print(order1)
+        print(order2)
     except:
         return None
+
 
 main()

@@ -8,7 +8,6 @@ class Rational:
             if isinstance(numerator, int) and isinstance(denominator, int):
                 self.__numerator = numerator // gcd(numerator, denominator)
                 self.__denominator = denominator // gcd(numerator, denominator)
-                return None
             else:
                 raise TypeError("Integers only")
 

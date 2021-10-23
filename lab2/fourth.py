@@ -19,12 +19,12 @@ class BinaryTree:
         if barcode == self._barcode:
             raise ValueError("This barcode already exists")
         if barcode < self._barcode:
-            if self.left is None:
+            if not self.left:
                 self.left = BinaryTree(barcode, unit_price)
             else:
                 self.left.insert(barcode, unit_price)
         elif barcode > self._barcode:
-            if self.right is None:
+            if not self.right:
                 self.right = BinaryTree(barcode, unit_price)
             else:
                 self.right.insert(barcode, unit_price)
@@ -33,13 +33,13 @@ class BinaryTree:
         """Final method, that help us to get price of an order (which consists of number of product
         and barcode)"""
         if barcode < self._barcode:
-            if self.left is None:
-                return f"{barcode} isn't available"
+            if not self.left:
+                return None
             else:
                 return self.left.get_cost(barcode)
         elif barcode > self._barcode:
-            if self.right is None:
-                return f"{barcode} isn't available"
+            if not self.right:
+                return None
             else:
                 return self.right.get_cost(barcode)
         else:

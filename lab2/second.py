@@ -14,8 +14,7 @@ class Analyzer:
         try:
             if not self.__content:
                 with open(self.__name, "r") as file:
-                    for text_elem in file:
-                        self.__content += text_elem
+                    self.__content += file.read()
         except IOError:
             return False
 
