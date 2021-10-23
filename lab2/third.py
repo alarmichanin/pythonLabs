@@ -5,15 +5,12 @@ import uuid
 class Student:
     """Class consists of array and 2 methods
     In initialization we can check that everything is ok and after that, get average score of each student
-    Also in the end we make some overloading of standart method str"""
+    Also in the end we make some overloading of standard method str"""
     __slots__ = ("_name", "_surname", "_record_book_number", "__grades", "_average")
-    students = []
 
     def __init__(self, name, surname, grades):
         if not isinstance(grades, list):
             raise TypeError("Grades have to be list type")
-        if f"{name} {surname}" in Student.students or f"{surname} {name}" in Student.students:
-            raise ValueError("This student is already exist")
         if not all(isinstance(elem, int) for elem in grades):
             raise TypeError("Grades can be int type only")
         self._name = name
@@ -21,10 +18,47 @@ class Student:
         self._record_book_number = uuid.uuid4()
         self.__grades = grades
         self._average = self.average(grades)
-        Student.students.append(f"{name} {surname}")
 
     def average(self, marks):
         return mean(marks)
+
+    def get_name(self):
+        return self._name
+
+    def get_surname(self):
+        return self._surname
+
+    def get_book_number(self):
+        return self._record_book_number
+
+    def get_grades(self):
+        return self.__grades
+
+    def set_name(self, n_name):
+        if not isinstance(n_name, str):
+            raise TypeError("Name must be string type only")
+        self._name = n_name
+
+    def set_surname(self, n_surname):
+        if not isinstance(n_surname, str):
+            raise TypeError("Surname must be string type only")
+        self._surname = n_surname
+
+    def set_record_book_number(self, record_book_number):
+        if not isinstance(record_book_number, int):
+            raise TypeError("Record book number must be string type only")
+        self._record_book_number = record_book_number
+
+    def set_grades(self, n_grades):
+        if not all(isinstance(grade, int) for grade in n_grades):
+            raise TypeError("Grade must be integer type only")
+        self.__grades = n_grades
+
+    def add_grade(self, grade):
+        if not isinstance(grade, int):
+            raise TypeError("Invalid type")
+        self.__grades.append(grade)
+        self._average = self.average(self.__grades)
 
     def __str__(self):
         return f"{self._name} {self._surname} ({self._record_book_number}): {self._average}"
@@ -36,6 +70,7 @@ MAX_STUDENTS = 20
 class Group:
     """In class Group we make some method success that give us list of the top 5 students in the group
     Also we made check that count of students can't be more than 20 """
+    students_check_arr = []
 
     def __init__(self, students):
         if not isinstance(students, list):
@@ -44,13 +79,16 @@ class Group:
             raise ValueError("Count of students have to be less than 20")
         if not all(isinstance(student, Student) for student in students):
             raise TypeError("Student can be Student type only")
+        for student in students:
+            if f"{student._name} {student._surname}" in Group.students_check_arr or f"{student._surname} {student._name}" in Group.students_check_arr:
+                raise ValueError("This student is already exist")
+            Group.students_check_arr.append(f"{student._name} {student._surname}")
         self.__students = students
 
     def success(self):
         top = [
             successful_student
-            for successful_student in sorted(self.__students, reverse=True,
-                                             key=lambda x: x._average)[:5]
+            for successful_student in sorted(self.__students, reverse=True, key=lambda x: x._average)[:5]
         ]
         return top
 
