@@ -17,48 +17,50 @@ class Student:
         self._surname = surname
         self._record_book_number = uuid.uuid4()
         self.__grades = grades
-        self._average = self.average(grades)
+        self._average = self.average()
 
-    def average(self, marks):
-        return mean(marks)
+    def average(self):
+        return mean(self.__grades)
 
-    def get_name(self):
+    @property
+    def name(self):
         return self._name
 
-    def get_surname(self):
+    @name.setter
+    def name(self, n_name):
+        if isinstance(n_name, str):
+            self._name = n_name
+        else:
+            raise TypeError("Name must be string type only")
+
+    @property
+    def surname(self):
         return self._surname
 
-    def get_book_number(self):
-        return self._record_book_number
+    @surname.setter
+    def surname(self, n_surname):
+        if isinstance(n_surname, str):
+            self._name = n_surname
+        else:
+            raise TypeError("Surname must be string type only")
 
-    def get_grades(self):
+    @property
+    def grades(self):
         return self.__grades
 
-    def set_name(self, n_name):
-        if not isinstance(n_name, str):
-            raise TypeError("Name must be string type only")
-        self._name = n_name
-
-    def set_surname(self, n_surname):
-        if not isinstance(n_surname, str):
-            raise TypeError("Surname must be string type only")
-        self._surname = n_surname
-
-    def set_record_book_number(self, record_book_number):
-        if not isinstance(record_book_number, int):
-            raise TypeError("Record book number must be string type only")
-        self._record_book_number = record_book_number
-
-    def set_grades(self, n_grades):
+    @grades.setter
+    def grades(self, n_grades):
+        if not isinstance(n_grades, list):
+            raise TypeError("Grades must be list type only")
         if not all(isinstance(grade, int) for grade in n_grades):
             raise TypeError("Grade must be integer type only")
         self.__grades = n_grades
 
     def add_grade(self, grade):
         if not isinstance(grade, int):
-            raise TypeError("Invalid type")
+            raise TypeError("Grade must be integer type only")
         self.__grades.append(grade)
-        self._average = self.average(self.__grades)
+        self._average = self.average()
 
     def __str__(self):
         return f"{self._name} {self._surname} ({self._record_book_number}): {self._average}"
