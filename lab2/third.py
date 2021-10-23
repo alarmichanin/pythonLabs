@@ -88,11 +88,7 @@ class Group:
         self.__students = students
 
     def success(self):
-        top = [
-            successful_student
-            for successful_student in sorted(self.__students, reverse=True, key=lambda x: x._average)[:5]
-        ]
-        return top
+        return sorted(self.__students, reverse=True, key=lambda x: x._average)[:5]
 
 
 student1 = Student("Yaroslav", "Dyhanov", grades=[5, 5, 4, 4, 5, 5, 4, 5])
