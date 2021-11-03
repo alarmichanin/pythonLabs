@@ -5,7 +5,7 @@ import uuid
 class Student:
     """Class consists of array and 2 methods
     In initialization we can check that everything is ok and after that, get average score of each student
-    Also in the end we make some overloading of standart method str"""
+    Also in the end we make some overloading of standard method str"""
     __slots__ = ("_name", "_surname", "_record_book_number", "__grades", "_average")
     students = []
 
