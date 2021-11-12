@@ -1,6 +1,7 @@
 import uuid
 import json
 import datetime
+from discounts import DISCOUNT_ADVANCED, DISCOUNT_LATE, DISCOUNT_STUDENT
 
 
 class ITEvent:
@@ -11,11 +12,11 @@ class ITEvent:
             self._price = price
         else:
             raise TypeError("Price have to be float type only!")
-        self._date = datetime.date(year, month, day)
         if isinstance(num_of_tickets, int):
             self._num_of_tickets = num_of_tickets
         else:
             raise TypeError("Number of tickets have to be integer type only!")
+        self._date = datetime.date(year, month, day)
 
     def write_to_JSON(self):
         """method that write data to JSON file"""
@@ -56,32 +57,38 @@ class RegularTicket:
 
 class AdvanceTicket(RegularTicket):
     """Advance ticket class, that have 40% discount on the basic ticket price"""
-    discount = 40
 
     def __init__(self):
         super().__init__()
-        self._price = self._price - (self._price * AdvanceTicket.discount) / 100
         self._type = "Advance ticket"
+
+    @property
+    def price(self):
+        return self._price - (self._price * DISCOUNT_ADVANCED) / 100
 
 
 class LateTicket(RegularTicket):
     """Late ticket class, that have 10% discount on the basic ticket price"""
-    discount = 10
 
     def __init__(self):
         super().__init__()
-        self._price = self._price - (self._price * LateTicket.discount) / 100
         self._type = "Late ticket"
+
+    @property
+    def price(self):
+        return self._price - (self._price * DISCOUNT_LATE) / 100
 
 
 class StudentTicket(RegularTicket):
     """Student ticket class, that have 50% discount on the basic ticket price"""
-    discount = 50
 
     def __init__(self):
         super().__init__()
-        self._price = self._price - (self._price * StudentTicket.discount) / 100
         self._type = "Student ticket"
+
+    @property
+    def price(self):
+        return self._price - (self._price * DISCOUNT_STUDENT) / 100
 
 
 class Client:
