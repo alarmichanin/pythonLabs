@@ -64,7 +64,7 @@ class AdvanceTicket(RegularTicket):
 
     @property
     def price(self):
-        return self._price - (self._price * DISCOUNT_ADVANCED) / 100
+        return self._price*(100-DISCOUNT_ADVANCED)/100
 
 
 class LateTicket(RegularTicket):
@@ -76,7 +76,7 @@ class LateTicket(RegularTicket):
 
     @property
     def price(self):
-        return self._price - (self._price * DISCOUNT_LATE) / 100
+        return self._price * (100 - DISCOUNT_LATE) / 100
 
 
 class StudentTicket(RegularTicket):
@@ -88,7 +88,7 @@ class StudentTicket(RegularTicket):
 
     @property
     def price(self):
-        return self._price - (self._price * DISCOUNT_STUDENT) / 100
+        return self._price * (100 - DISCOUNT_STUDENT) / 100
 
 
 class Client:
@@ -176,7 +176,7 @@ class Order:
     def get_ticket_price(ticket_type):
         """method to get price of ticket"""
         if isinstance(ticket_type, (RegularTicket, StudentTicket, AdvanceTicket, LateTicket)):
-            return ticket_type._price
+            return ticket_type.price
         else:
             raise TypeError("ticket_type have to be one of the type of ticket")
 
@@ -187,7 +187,7 @@ class Order:
         ticket_dict[str(ticket_type._id)]["surname"] = self.__client.surname
         ticket_dict[str(ticket_type._id)]["is_student"] = self.__client.is_student
         ticket_dict[str(ticket_type._id)]["type_of_ticket"] = ticket_type._type
-        ticket_dict[str(ticket_type._id)]["price"] = ticket_type._price
+        ticket_dict[str(ticket_type._id)]["price"] = ticket_type.price
         ticket_dict[str(ticket_type._id)]["purchase_date"] = str(datetime.date.today())
         with open("ITevent.json") as file:
             event = json.load(file)
