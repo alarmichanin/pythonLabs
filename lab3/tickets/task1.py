@@ -5,6 +5,7 @@ import datetime
 
 class ITEvent:
     """class for making some It event """
+
     def __init__(self, price, day, month, year, num_of_tickets):
         if isinstance(price, (float, int)):
             self._price = price
@@ -26,6 +27,7 @@ class ITEvent:
 
 class RegularTicket:
     """Base ticket class"""
+
     def __init__(self):
         self._id = uuid.uuid4()
         with open("ITevent.json") as file:
@@ -84,6 +86,7 @@ class StudentTicket(RegularTicket):
 
 class Client:
     """Client class that describe customer that order the ticket """
+
     def __init__(self, name, surname, is_student):
         if not isinstance(name, str):
             raise TypeError("Name have to be string type only!")
@@ -131,6 +134,7 @@ class Client:
 
 class Order:
     """Order class consist of the methods that allow to get full information about the ticket"""
+
     def __init__(self, client):
         if isinstance(client, Client):
             self.__client = client

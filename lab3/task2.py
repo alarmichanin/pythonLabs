@@ -1,54 +1,84 @@
-pizza = {
-    1: 'Margherita',
-    2: 'Peperoni',
-    3: '4 Cheeses',
-    4: 'Chicago',
-    5: 'Americana',
-    6: 'Marinara',
-    7: 'Prosciutto'
-}
+import json
+import datetime
 
-price = {
-    'Margherita': 120,
-    'Peperoni': 152,
-    '4 Cheeses': 125,
-    'Chicago': 237,
-    'Americana': 203,
-    'Marinara': 119,
-    'Prosciutto': 171
-}
+
+class Menu:
+    def __init__(self, pizzas, ingredients):
+        self._pizzas = pizzas
+        self._ingredients = ingredients
+
+    def write_to_JSON(self):
+        with open("pizzas.json", "w") as write_file:
+            json.dump(self._pizzas, write_file)
+        with open("ingredients.json", "w") as write_file:
+            json.dump(self._ingredients, write_file)
 
 
 class Pizza:
-    def __init__(self, day):
-        if isinstance(day, int):
-            self.day = day
+    def __init__(self, ingredients=[]):
+        if not isinstance(ingredients, list):
+            raise TypeError("Ingredients have to be list type only!")
+        if ingredients:
+            with open("ingredients.json") as file:
+                event = json.load(file)
+                ings = [*event]
+                if not all(tuple(x in ings for x in ingredients)):
+                    raise ValueError("There is element which does not exist in the ingredient list")
+                self._price_of_ingredients = 0
+                for every in ingredients:
+                    self._price_of_ingredients += event[every]
+            self._ingredients = ingredients
         else:
-            raise TypeError("Day have to be integer type")
-        self.total = 0
-
-    def order_pizza(self, name_of_pizza, potential_products):
-        if not isinstance(name_of_pizza, str):
-            raise TypeError("name_of_pizza have to be string type only")
-        if not isinstance(potential_products, list):
-            raise TypeError("potential_products have to be list type only")
-        if name_of_pizza not in price:
-            raise ValueError("Look at pizza list")
-        self.total += price[name_of_pizza]
-        total_products = str(potential_products)
-        return f'{name_of_pizza} added to the order!\nAdded products:{total_products}\nPrice:{price[name_of_pizza]}\nTotal price:{self.total}'
+            self._ingredients = 0
+        self._day = datetime.datetime.today().weekday()
+        self._price_of_pizza = 0
+        self._pizza_of_the_day = self.pizza_of_the_day()
 
     def pizza_of_the_day(self):
-        if self.day < 1 or self.day > 7:
-            raise ValueError("Unreal day!")
-        return pizza[self.day]
+        with open("pizzas.json") as file:
+            event = json.load(file)
+            pizzas = [*event]
+            self._price_of_pizza = event[pizzas[self._day]]
+        return pizzas[self._day]
 
     def order_price(self):
-        return self.total
+        if self._ingredients:
+            return self._price_of_ingredients + self._price_of_pizza
+        else:
+            return self._price_of_pizza
+
+    def if_ingredients(self):
+        if self._ingredients:
+            return f'\nAdditional ingredients: {",".join(self._ingredients)} - {self._price_of_ingredients}'
+        else:
+            return ''
+
+    def __str__(self):
+        return f'Pizza of the day: {self._pizza_of_the_day} - {self._price_of_pizza}{self.if_ingredients()}\nYour order price: {self.order_price()}\n'
 
 
-ord = Pizza(7)
-print(ord.order_pizza('4 Cheeses', ['Mushrooms', 'Meet']))
-print(ord.order_pizza('Chicago', ['Cheese']))
-print(ord.order_price())
-print(ord.pizza_of_the_day())
+def main():
+    pizzas = {
+        'Margherita': 120,
+        'Peperoni': 152,
+        '4 Cheeses': 125,
+        'Chicago': 237,
+        'Americana': 203,
+        'Marinara': 119,
+        'Prosciutto': 171
+    }
+    ingredients = {
+        'mushrooms': 15,
+        'cheese': 35,
+        'olives': 20,
+        'lettuce': 10,
+        'tomato': 15
+    }
+    Menu(pizzas, ingredients).write_to_JSON()
+    ord1 = Pizza(['mushrooms', 'tomato'])
+    ord2 = Pizza()
+    print(ord1)
+    print(ord2)
+
+
+main()
