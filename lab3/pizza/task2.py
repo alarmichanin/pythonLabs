@@ -15,9 +15,7 @@ class Menu:
 
 
 class Pizza:
-    def __init__(self, ingredients=[]):
-        if not isinstance(ingredients, list):
-            raise TypeError("Ingredients have to be list type only!")
+    def __init__(self, count, ingredients):
         if ingredients:
             with open("ingredients.json") as file:
                 event = json.load(file)
@@ -30,11 +28,20 @@ class Pizza:
             self._ingredients = ingredients
         else:
             self._ingredients = 0
+        self._count = count
         self._day = datetime.datetime.today().weekday()
         self._price_of_pizza = 0
-        self._pizza_of_the_day = self.pizza_of_the_day()
+        self._pizza_of_the_day = self.pizza_of_the_day_func()
 
+    @property
     def pizza_of_the_day(self):
+        return self._pizza_of_the_day
+
+    @property
+    def price_of_pizza(self):
+        return self._price_of_pizza
+
+    def pizza_of_the_day_func(self):
         with open("pizzas.json") as file:
             event = json.load(file)
             pizzas = [*event]
@@ -43,7 +50,7 @@ class Pizza:
 
     def order_price(self):
         if self._ingredients:
-            return self._price_of_ingredients + self._price_of_pizza
+            return round(self._price_of_ingredients + self._price_of_pizza * self._count,2)
         else:
             return self._price_of_pizza
 
@@ -55,6 +62,40 @@ class Pizza:
 
     def __str__(self):
         return f'Pizza of the day: {self._pizza_of_the_day} - {self._price_of_pizza}{self.if_ingredients()}\nYour order price: {self.order_price()}\n'
+
+
+class SpecialOrder(Pizza):
+    """Pizza's class for special order (that isn't exist at default menu )"""
+
+    def __init__(self, title, price, count, add_ingredients):
+        if not isinstance(title, str):
+            raise TypeError("Pizza's name have to be string type only!")
+        if not isinstance(price, float):
+            raise TypeError("Pizza's price have to be float type only!")
+        super().__init__(count, add_ingredients)
+        self._pizza_of_the_day = title
+        self._price_of_pizza = price
+
+    @property
+    def pizza_of_the_day(self):
+        return self._pizza_of_the_day
+
+    @property
+    def price_of_pizza(self):
+        return self._price_of_pizza
+
+
+def order(count, is_default, add_ingredients=[], title="", price=0):
+    if not isinstance(add_ingredients, list):
+        raise TypeError("Ingredients have to be list type only!")
+    if not isinstance(count, int):
+        raise TypeError("count have to be int type only!")
+    if not isinstance(is_default, bool):
+        raise TypeError("is_default have to be bool type only!")
+    if is_default:
+        return Pizza(count, add_ingredients)
+    else:
+        return SpecialOrder(title, price, count, add_ingredients)
 
 
 def main():
@@ -75,10 +116,12 @@ def main():
         'tomato': 15
     }
     Menu(pizzas, ingredients).write_to_JSON()
-    ord1 = Pizza(['mushrooms', 'tomato'])
-    ord2 = Pizza()
+    ord1 = order(2, True, ['mushrooms', 'tomato'])
+    ord2 = order(3, False, ['cheese', 'olives'], "Delicious", 99.99)
+    ord3 = order(1, False, [], "Buenno", 100.99)
     print(ord1)
     print(ord2)
+    print(ord3)
 
 
 main()
