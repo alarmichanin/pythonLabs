@@ -1,6 +1,9 @@
 import json
 import datetime
 
+PIZZA_FILE = "pizzas.json"
+INGREDIENTS_FILE = "ingredients.json"
+
 
 class Menu:
     def __init__(self, pizzas, ingredients):
@@ -8,16 +11,23 @@ class Menu:
         self._ingredients = ingredients
 
     def write_to_JSON(self):
-        with open("pizzas.json", "w") as write_file:
+        with open(PIZZA_FILE, "w") as write_file:
             json.dump(self._pizzas, write_file)
-        with open("ingredients.json", "w") as write_file:
+        with open(INGREDIENTS_FILE, "w") as write_file:
             json.dump(self._ingredients, write_file)
 
 
 class Pizza:
+    """
+    Base class, that consist of functions:
+    - Make pizza of the day (give opportunity to get pizza from json file)
+    - Sum prices (to get price of the whole order: ingredients + pizzas)
+    - We can check (if there are additional ingredients in the order
+    and after that our function add or not add some data about it to the string of order)
+    """
     def __init__(self, count, ingredients):
         if ingredients:
-            with open("ingredients.json") as file:
+            with open(INGREDIENTS_FILE) as file:
                 event = json.load(file)
                 ings = [*event]
                 if not all(tuple(x in ings for x in ingredients)):
@@ -42,7 +52,7 @@ class Pizza:
         return self._price_of_pizza
 
     def pizza_of_the_day_func(self):
-        with open("pizzas.json") as file:
+        with open(PIZZA_FILE) as file:
             event = json.load(file)
             pizzas = [*event]
             self._price_of_pizza = event[pizzas[self._day]]
@@ -50,7 +60,7 @@ class Pizza:
 
     def order_price(self):
         if self._ingredients:
-            return round(self._price_of_ingredients + self._price_of_pizza * self._count,2)
+            return round(self._price_of_ingredients + self._price_of_pizza * self._count, 2)
         else:
             return self._price_of_pizza
 
@@ -65,7 +75,11 @@ class Pizza:
 
 
 class SpecialOrder(Pizza):
-    """Pizza's class for special order (that isn't exist at default menu )"""
+    """
+    Pizza's class for special order (that isn't exist at default menu )
+    If there are special order (not default pizza of the day), we can add it to the order
+    (but first of all, we need give a name of special pizza + price of this pizza)
+    """
 
     def __init__(self, title, price, count, add_ingredients):
         if not isinstance(title, str):
@@ -86,6 +100,9 @@ class SpecialOrder(Pizza):
 
 
 def order(count, is_default, add_ingredients=[], title="", price=0):
+    """
+    This function make a decision about which order we need to create (default with pizza of the day or special order)
+    """
     if not isinstance(add_ingredients, list):
         raise TypeError("Ingredients have to be list type only!")
     if not isinstance(count, int):
