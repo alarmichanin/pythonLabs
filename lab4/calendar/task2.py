@@ -29,21 +29,51 @@ class Calendar:
     def day(self):
         return self.__day
 
+    @day.setter
+    def day(self, day):
+        if isinstance(day, int):
+            self.__day = day
+        else:
+            raise TypeError("Day has to be integer type only")
+
     @property
     def month(self):
         return self.__month
+
+    @month.setter
+    def month(self, month):
+        if isinstance(month, int):
+            self.__month = month
+        else:
+            raise TypeError("Month has to be integer type only")
 
     @property
     def year(self):
         return self.__year
 
+    @year.setter
+    def year(self, year):
+        if isinstance(year, int):
+            self.__year = year
+        else:
+            raise TypeError("Year has to be integer type only")
+
     def __str__(self):
         return f'Day: {self.day}\nMonth: {self.month}\nYear: {self.year}'
 
     def __iadd__(self, other):
-        if not isinstance(other, Calendar):
-            raise TypeError("Second item have to be Calendar type only")
-    #     TODO: += and -= operators 
+        if not isinstance(other, changeTime):
+            raise TypeError("Second item have to be changeTime type only")
+        self.year += changeTime.years
+        self.month += changeTime.months
+        days = (int)changeTime.days
+        while days > 0:
+            if self.day == DAYS_IN_MONTH[self.month - 1]:
+                self.month += 1
+            self.day += 1
+            changeTime.days -= 1
+
+    #     TODO: += and -= operators
 
     def __eq__(self, other):
         if not isinstance(other, Calendar):
@@ -112,9 +142,46 @@ class Calendar:
         return False
 
 
+class changeTime:
+    def __init__(self, days, months, years):
+        if not isinstance(days, int):
+            raise TypeError("Days have to be integer type only")
+        if not isinstance(months, int):
+            raise TypeError("Months have to be integer type only")
+        if not isinstance(years, int):
+            raise TypeError("Years have to be integer type only")
+        if (days or months or years) < 0:
+            raise ValueError("Value has to be greater then 0")
+        self.__days = days
+        self.__months = months
+        self.__years = years
+
+    @property
+    def days(self):
+        return self.__days
+
+    @days.setter
+    def days(self, days):
+        if isinstance(days, int):
+            self.__days = days
+        else:
+            raise TypeError("Days has to be integer type only")
+
+    @property
+    def months(self):
+        return self.__months
+
+    @property
+    def years(self):
+        return self.__years
+
+
 def main():
     a = Calendar(29, 2, 2000)
     b = Calendar(29, 2, 2000)
+    c = changeTime(50, 0, 0)
+    a += c
+    print(a)
     print(a <= b)
 
 
