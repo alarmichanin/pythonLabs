@@ -158,7 +158,6 @@ class Calendar:
                             DAYS_IN_MONTH[1] = 29
                         else:
                             DAYS_IN_MONTH[1] = 28
-                        self.day = DAYS_IN_MONTH[self.month - 1]
                     if self.year % 4 and self.month == 2 and self.day > 28:
                         self.month += 1
                         self.day = self.day - 28
@@ -261,9 +260,9 @@ def main():
     a = Calendar(30, 12, 2003)
     b = Calendar(29, 2, 2000)
     c = ChangeTime(0, 12, 0)
-    d = ChangeTime(2, 12, 0)
-    b -= c
-    b += d
+    d = ChangeTime(1, 12, 0)
+    b += c
+    b -= d
     print(b)
 
 
