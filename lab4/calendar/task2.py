@@ -101,7 +101,16 @@ class Calendar:
         self.year += other.years
         if self.month + other.months > 12:
             self.year += (self.month + other.months) // 12
-            self.month = (self.month + other.months) % 12
+            if self.year % 4 and self.month == 2 and self.day > 28:
+                self.month = (self.month + other.months) % 12 + 1
+                self.day = self.day - 28
+            else:
+                if not self.year % 4:
+                    DAYS_IN_MONTH[1] = 29
+                else:
+                    DAYS_IN_MONTH[1] = 28
+                self.month = (self.month + other.months) % 12
+                self.day=DAYS_IN_MONTH[self.month - 1]
         else:
             self.month += other.months
         while other.days > 0:
@@ -123,10 +132,63 @@ class Calendar:
             if self.year % 4 and self.month == 2 and self.day > 28:
                 self.month += 1
                 self.day = self.day - 28
-
         return Calendar(self.day, self.month, self.year)
 
-    #     TODO: += and -= operators
+    def __isub__(self, other):
+        if not isinstance(other, ChangeTime):
+            raise TypeError("Second item have to be changeTime type only")
+        self.year -= other.years
+        if self.month - other.months <= 0:
+            if other.months < 12:
+                self.year -= 1
+                self.month = 12 - (other.months - self.month)
+            else:
+                self.year -= other.months // 12
+                if self.month - other.months % 12 <= 0:
+                    self.month = 12 - other.months % 12 + self.month
+                    self.year -= 1
+                    if self.year % 4 and self.month == 2 and self.day > 28:
+                        self.month += 1
+                        self.day = self.day - 28
+                else:
+                    if other.months % 12:
+                        self.month -= other.months % 12
+                    else:
+                        if not self.year % 4:
+                            DAYS_IN_MONTH[1] = 29
+                        else:
+                            DAYS_IN_MONTH[1] = 28
+                        self.day = DAYS_IN_MONTH[self.month - 1]
+                    if self.year % 4 and self.month == 2 and self.day > 28:
+                        self.month += 1
+                        self.day = self.day - 28
+        else:
+            self.month -= other.months
+        while other.days > 0:
+            if not self.year % 4:
+                DAYS_IN_MONTH[1] = 29
+            else:
+                DAYS_IN_MONTH[1] = 28
+            if self.day - other.days < 0:
+                other.days -= self.day
+                if self.month - 1 < 1:
+                    self.year -= 1
+                    self.month = 12
+                else:
+                    self.month -= 1
+                self.day = DAYS_IN_MONTH[self.month - 1]
+            else:
+                if self.day - other.days:
+                    self.day -= other.days
+                else:
+                    if self.month - 1 <= 0:
+                        self.month = 12
+                        self.year -= 1
+                    else:
+                        self.month -= 1
+                    self.day = DAYS_IN_MONTH[self.month - 1]
+                other.days = 0
+        return Calendar(self.day, self.month, self.year)
 
     def __eq__(self, other):
         if not isinstance(other, Calendar):
@@ -196,11 +258,13 @@ class Calendar:
 
 
 def main():
-    a = Calendar(28, 2, 2003)
+    a = Calendar(30, 12, 2003)
     b = Calendar(29, 2, 2000)
-    c = ChangeTime(50, 12, 0)
-    a += c
-    print(a)
+    c = ChangeTime(0, 12, 0)
+    d = ChangeTime(2, 12, 0)
+    b -= c
+    b += d
+    print(b)
 
 
 main()
