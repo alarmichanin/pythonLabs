@@ -2,6 +2,15 @@ DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 
 class ChangeTime:
+    """
+    Class consists of three fields:
+    There are checking on correct input (every value has to be greater than 0)
+    - days
+    - months
+    - years
+    It gives us the opportunity to make an object for addition with the Calendar class
+    """
+
     def __init__(self, days=0, months=0, years=0):
         if not isinstance(days, int):
             raise TypeError("Days have to be integer type only")
@@ -17,10 +26,16 @@ class ChangeTime:
 
     @property
     def days(self):
+        """
+        Getter for days
+        """
         return self.__days
 
     @days.setter
     def days(self, days: int):
+        """
+        Setter for days
+        """
         if isinstance(days, int):
             self.__days = days
         else:
@@ -28,14 +43,33 @@ class ChangeTime:
 
     @property
     def months(self):
+        """
+        Getter for months
+        """
         return self.__months
 
     @property
     def years(self):
+        """
+        Getter for years
+        """
         return self.__years
+
+    def __str__(self):
+        """
+        Overloading str operator
+        """
+        return f'Days: {self.days}\nMonths: {self.months}\nYears: {self.years}'
 
 
 class Calendar:
+    """
+    Class consists of three fields:
+    - days      (there is checking on correctly day, depends on leap year )
+    - months    (there is checking on correctly month, depends on value greater than 0 and less than 13)
+    - years     (there is checking on correctly year, depends on value greater than 0)
+    """
+
     def __init__(self, day: int, month: int, year: int):
         if not isinstance(year, int):
             raise TypeError("Year has to be integer type only")
@@ -61,10 +95,16 @@ class Calendar:
 
     @property
     def day(self):
+        """
+        Getter for day
+        """
         return self.__day
 
     @day.setter
     def day(self, day):
+        """
+        Setter for day
+        """
         if isinstance(day, int):
             self.__day = day
         else:
@@ -72,10 +112,16 @@ class Calendar:
 
     @property
     def month(self):
+        """
+        Getter for month
+        """
         return self.__month
 
     @month.setter
     def month(self, month):
+        """
+        Setter for month
+        """
         if isinstance(month, int):
             self.__month = month
         else:
@@ -83,19 +129,31 @@ class Calendar:
 
     @property
     def year(self):
+        """
+        Getter for year
+        """
         return self.__year
 
     @year.setter
     def year(self, year):
+        """
+        Setter for year
+        """
         if isinstance(year, int):
             self.__year = year
         else:
             raise TypeError("Year has to be integer type only")
 
     def __str__(self):
+        """
+        Overloading str operator
+        """
         return f'Day: {self.day}\nMonth: {self.month}\nYear: {self.year}'
 
     def __iadd__(self, other: ChangeTime):
+        """
+        Overloading of += operator, for adding some days,months,years to the some date
+        """
         if not isinstance(other, ChangeTime):
             raise TypeError("Second item have to be changeTime type only")
         self.year += other.years
@@ -110,7 +168,7 @@ class Calendar:
                 else:
                     DAYS_IN_MONTH[1] = 28
                 self.month = (self.month + other.months) % 12
-                self.day=DAYS_IN_MONTH[self.month - 1]
+                self.day = DAYS_IN_MONTH[self.month - 1]
         else:
             self.month += other.months
         while other.days > 0:
@@ -135,6 +193,9 @@ class Calendar:
         return Calendar(self.day, self.month, self.year)
 
     def __isub__(self, other):
+        """
+        Overloading of -= operator, for subtraction some days,months,years to the some date
+        """
         if not isinstance(other, ChangeTime):
             raise TypeError("Second item have to be changeTime type only")
         self.year -= other.years
@@ -190,6 +251,9 @@ class Calendar:
         return Calendar(self.day, self.month, self.year)
 
     def __eq__(self, other):
+        """
+        Overloading of == operator, for comparing two dates
+        """
         if not isinstance(other, Calendar):
             raise TypeError("Second item have to be Calendar type only")
         if self.year == other.year and self.month == other.month and self.day == other.day:
@@ -197,6 +261,9 @@ class Calendar:
         return False
 
     def __ne__(self, other):
+        """
+        Overloading of != operator, for comparing two dates
+        """
         if not isinstance(other, Calendar):
             raise TypeError("Second item have to be Calendar type only")
         if self.year != other.year or self.month != other.month or self.day != other.day:
@@ -204,6 +271,9 @@ class Calendar:
         return False
 
     def __gt__(self, other):
+        """
+        Overloading of > operator, for comparing two dates
+        """
         if not isinstance(other, Calendar):
             raise TypeError("Second item have to be Calendar type only")
         if self.year > other.year:
@@ -217,6 +287,9 @@ class Calendar:
         return False
 
     def __ge__(self, other):
+        """
+        Overloading of >= operator, for comparing two dates
+        """
         if not isinstance(other, Calendar):
             raise TypeError("Second item have to be Calendar type only")
         if self.year > other.year:
@@ -230,6 +303,9 @@ class Calendar:
         return False
 
     def __lt__(self, other):
+        """
+        Overloading of < operator, for comparing two dates
+        """
         if not isinstance(other, Calendar):
             raise TypeError("Second item have to be Calendar type only")
         if self.year < other.year:
@@ -243,6 +319,9 @@ class Calendar:
         return False
 
     def __le__(self, other):
+        """
+        Overloading of <= operator, for comparing two dates
+        """
         if not isinstance(other, Calendar):
             raise TypeError("Second item have to be Calendar type only")
         if self.year < other.year:
@@ -257,13 +336,14 @@ class Calendar:
 
 
 def main():
-    a = Calendar(30, 12, 2003)
-    b = Calendar(29, 2, 2000)
-    c = ChangeTime(0, 12, 0)
-    d = ChangeTime(1, 12, 0)
-    b += c
-    b -= d
-    print(b)
+    first_date = Calendar(30, 12, 2003)
+    second_date = Calendar(29, 2, 2000)
+    time_for_plus = ChangeTime(0, 12, 0)
+    time_for_minus = ChangeTime(31, 12, 0)
+    first_date -= time_for_minus
+    second_date += time_for_plus
+    print(first_date)
+    print(second_date)
 
 
 main()
