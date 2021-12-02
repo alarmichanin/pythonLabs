@@ -24,12 +24,37 @@ class Rational:
         """
         return self.__numerator
 
+    @numerator.setter
+    def numerator(self, other):
+        """
+        Setter for numerator
+        """
+        if isinstance(other, int):
+            self.__numerator = other
+        else:
+            raise TypeError("Numerator has to be integer type only")
+
     @property
     def denominator(self):
         """
         Getter for denominator
         """
         return self.__denominator
+
+    @denominator.setter
+    def denominator(self, other):
+        """
+        Setter for denominator
+        """
+        if isinstance(other, int):
+            self.__denominator = other
+        else:
+            raise TypeError("Denominator has to be integer type only")
+
+    def reduction(self):
+        n = gcd(self.numerator, self.denominator)
+        self.numerator //= n
+        self.denominator //= n
 
     """
     Operators overloading
@@ -41,10 +66,14 @@ class Rational:
         (Method that get an operator for overloading and overloads it)
         """
         if isinstance(other, Rational):
-            return Rational(oper(self.numerator * other.denominator, self.denominator * other.numerator),
-                            self.denominator * other.denominator)
+            self.numerator = oper(self.numerator * other.denominator, self.denominator * other.numerator)
+            self.denominator = self.denominator * other.denominator
+            self.reduction()
+            return self
         if isinstance(other, int):
-            return Rational(oper(self.numerator, other * self.denominator), self.denominator)
+            self.numerator = oper(self.numerator, other * self.denominator)
+            self.reduction()
+            return self
         raise TypeError("Rational and int types only")
 
     def __add__(self, other):
@@ -67,9 +96,14 @@ class Rational:
             Calculate the multiplication of first rational and second
         """
         if isinstance(other, Rational):
-            return Rational(self.numerator * other.numerator, self.denominator * other.denominator)
+            self.numerator = self.numerator * other.numerator
+            self.denominator = self.denominator * other.denominator
+            self.reduction()
+            return self
         if isinstance(other, int):
-            return Rational(self.numerator * other, self.denominator)
+            self.numerator = self.numerator * other
+            self.reduction()
+            return self
         raise TypeError("only rational and int types")
 
     def __truediv__(self, other):
@@ -78,9 +112,14 @@ class Rational:
             Calculate the division of first rational and second
         """
         if isinstance(other, Rational):
-            return Rational(self.numerator * other.denominator, self.denominator * other.numerator)
+            self.numerator = self.numerator * other.denominator
+            self.denominator = self.denominator * other.numerator
+            self.reduction()
+            return self
         if isinstance(other, int):
-            return Rational(self.numerator, self.denominator * other)
+            self.denominator = self.denominator * other.numerator
+            self.reduction()
+            return self
         raise TypeError("only rational and int types")
 
     def __iadd__(self, other):
@@ -100,9 +139,14 @@ class Rational:
         Overloading "*=" operator
         """
         if isinstance(other, Rational):
-            return Rational(self.numerator * other.numerator, self.denominator * other.denominator)
+            self.numerator = self.numerator * other.numerator
+            self.denominator = self.denominator * other.denominator
+            self.reduction()
+            return self
         if isinstance(other, int):
-            return Rational(self.numerator * other, self.denominator)
+            self.numerator = self.numerator * other
+            self.reduction()
+            return self
         raise TypeError("only rational and int types")
 
     def __itruediv__(self, other):
@@ -110,9 +154,14 @@ class Rational:
         Overloading "/=" operator
         """
         if isinstance(other, Rational):
-            return Rational(self.numerator * other.denominator, self.denominator * other.numerator)
+            self.numerator = self.numerator * other.denominator
+            self.denominator = self.denominator * other.numerator
+            self.reduction()
+            return self
         if isinstance(other, int):
-            return Rational(self.numerator, self.denominator * other)
+            self.denominator = self.denominator * other.numerator
+            self.reduction()
+            return self
         raise TypeError("only rational and int types")
 
     def __cmp__(self, other, oper):

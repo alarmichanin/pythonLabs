@@ -1,6 +1,13 @@
 DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 
+def leap_year(year):
+    """
+    function for checking if there is leap year
+    """
+    return not year % 4 and year % 100 or not year % 400
+
+
 class ChangeTime:
     """
     Class consists of three fields:
@@ -80,7 +87,7 @@ class Calendar:
         if not isinstance(day, int):
             raise TypeError("Day has to be integer type only")
         if month == 2:
-            if not year % 4:
+            if leap_year(year):
                 if not 0 < day < 30:
                     raise ValueError("It is a leap year with a maximum of 29 days in February")
             else:
@@ -159,11 +166,11 @@ class Calendar:
         self.year += other.years
         if self.month + other.months > 12:
             self.year += (self.month + other.months) // 12
-            if self.year % 4 and self.month == 2 and self.day > 28:
+            if leap_year(self.__year) and self.month == 2 and self.day > 28:
                 self.month = (self.month + other.months) % 12 + 1
                 self.day = self.day - 28
             else:
-                if not self.year % 4:
+                if leap_year(self.__year):
                     DAYS_IN_MONTH[1] = 29
                 else:
                     DAYS_IN_MONTH[1] = 28
@@ -172,7 +179,7 @@ class Calendar:
         else:
             self.month += other.months
         while other.days > 0:
-            if not self.year % 4:
+            if leap_year(self.__year):
                 DAYS_IN_MONTH[1] = 29
             else:
                 DAYS_IN_MONTH[1] = 28
@@ -187,7 +194,7 @@ class Calendar:
             else:
                 self.day += other.days
                 other.days = 0
-            if self.year % 4 and self.month == 2 and self.day > 28:
+            if leap_year(self.__year) and self.month == 2 and self.day > 28:
                 self.month += 1
                 self.day = self.day - 28
         return Calendar(self.day, self.month, self.year)
@@ -208,24 +215,24 @@ class Calendar:
                 if self.month - other.months % 12 <= 0:
                     self.month = 12 - other.months % 12 + self.month
                     self.year -= 1
-                    if self.year % 4 and self.month == 2 and self.day > 28:
+                    if leap_year(self.__year) and self.month == 2 and self.day > 28:
                         self.month += 1
                         self.day = self.day - 28
                 else:
                     if other.months % 12:
                         self.month -= other.months % 12
                     else:
-                        if not self.year % 4:
+                        if leap_year(self.__year):
                             DAYS_IN_MONTH[1] = 29
                         else:
                             DAYS_IN_MONTH[1] = 28
-                    if self.year % 4 and self.month == 2 and self.day > 28:
+                    if leap_year(self.__year) and self.month == 2 and self.day > 28:
                         self.month += 1
                         self.day = self.day - 28
         else:
             self.month -= other.months
         while other.days > 0:
-            if not self.year % 4:
+            if leap_year(self.__year):
                 DAYS_IN_MONTH[1] = 29
             else:
                 DAYS_IN_MONTH[1] = 28
