@@ -83,6 +83,38 @@ class Rational:
             return Rational(self.numerator, self.denominator * other)
         raise TypeError("only rational and int types")
 
+    def __iadd__(self, other):
+        """
+        Overloading "+=" operator
+        """
+        return self.__wrap__(other, operator.add)
+
+    def __isub__(self, other):
+        """
+        Overloading "-=" operator
+        """
+        return self.__wrap__(other, operator.sub)
+
+    def __imul__(self, other):
+        """
+        Overloading "*=" operator
+        """
+        if isinstance(other, Rational):
+            return Rational(self.numerator * other.numerator, self.denominator * other.denominator)
+        if isinstance(other, int):
+            return Rational(self.numerator * other, self.denominator)
+        raise TypeError("only rational and int types")
+
+    def __itruediv__(self, other):
+        """
+        Overloading "/=" operator
+        """
+        if isinstance(other, Rational):
+            return Rational(self.numerator * other.denominator, self.denominator * other.numerator)
+        if isinstance(other, int):
+            return Rational(self.numerator, self.denominator * other)
+        raise TypeError("only rational and int types")
+
     def __cmp__(self, other, oper):
         """
         Method that get an operator for overloading and overloads it
